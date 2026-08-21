@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abu Skill 使用指南</title>
+<style>
+:root {
+  --bg: #f8f9fa;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1a202c;
+  --text-secondary: #64748b;
+  --primary: #3b82f6;
+  --primary-light: #dbeafe;
+  --t1: #dc2626;
+  --t2: #ea580c;
+  --t3: #16a34a;
+  --t4: #0891b2;
+  --t5: #7c3aed;
+  --t6: #64748b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 24px;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+.header {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 40px 32px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+}
+.header h1 { font-size: 28px; margin-bottom: 8px; }
+.header .subtitle { font-size: 15px; opacity: 0.85; }
+.header .stats { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+.header .stat { background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 8px; font-size: 14px; }
+.legend {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.legend h2 { font-size: 18px; margin-bottom: 16px; }
+.legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.legend-badge { padding: 2px 10px; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.legend-badge.t1 { background: var(--t1); }
+.legend-badge.t2 { background: var(--t2); }
+.legend-badge.t3 { background: var(--t3); }
+.legend-badge.t4 { background: var(--t4); }
+.legend-badge.t5 { background: var(--t5); }
+.legend-badge.t6 { background: var(--t6); }
+.prio-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.prio-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.prio-header .level { font-size: 12px; padding: 4px 12px; border-radius: 6px; color: white; font-weight: 600; }
+.prio-header .level.t1 { background: var(--t1); }
+.prio-header .level.t2 { background: var(--t2); }
+.prio-header .level.t3 { background: var(--t3); }
+.prio-header .level.t4 { background: var(--t4); }
+.prio-header .level.t5 { background: var(--t5); }
+.prio-header .level.t6 { background: var(--t6); }
+.prio-header h2 { font-size: 20px; }
+.prio-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+.skill-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+.skill-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.skill-card .name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; font-family: "SF Mono", "Cascadia Code", monospace; }
+.skill-card .desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.skill-card .trigger { font-size: 12px; color: var(--primary); margin-top: 6px; font-style: italic; }
+.skill-card .badge {
+  position: absolute; top: 12px; right: 12px;
+  padding: 2px 8px; border-radius: 5px;
+  font-size: 11px; font-weight: 600; color: white;
+}
+.skill-card .badge.t1 { background: var(--t1); }
+.skill-card .badge.t2 { background: var(--t2); }
+.skill-card .badge.t3 { background: var(--t3); }
+.skill-card .badge.t4 { background: var(--t4); }
+.skill-card .badge.t5 { background: var(--t5); }
+.skill-card .badge.t6 { background: var(--t6); }
+.search-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.search-box input {
+  flex: 1; border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; font-size: 14px; outline: none;
+}
+.search-box input:focus { border-color: var(--primary); }
+.search-box .count { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+.footer {
+  text-align: center; padding: 24px;
+  color: var(--text-secondary); font-size: 13px;
+  border-top: 1px solid var(--border); margin-top: 32px;
+}
+.footer p { margin: 4px 0; }
+.footer .generated { font-size: 12px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>Abu Skill 使用指南</h1>
+  <div class="subtitle">已安装技能完整清单 · 按常用程度分级 · 按功能领域分类</div>
+  <div class="stats">
+    <div class="stat">📦 总技能数：<strong>96</strong></div>
+    <div class="stat">📂 功能分类：<strong>12</strong></div>
+    <div class="stat">🔢 优先级：<strong>6 级</strong></div>
+    <div class="stat">🕐 更新时间：2026-08-21</div>
+  </div>
+</div>
+
+<div class="search-box">
+  <span style="font-size:18px">🔍</span>
+  <input type="text" id="search" placeholder="搜索技能名称、描述或触发条件…" oninput="filterSkills()">
+  <span class="count" id="match-count"></span>
+</div>
+
+<div class="legend">
+  <h2>优先级彩色图例</h2>
+  <div class="legend-grid">
+    <div class="legend-item"><span class="legend-badge t1">P0 核心</span><span>日常办公最高频使用，几乎每天都会触发</span></div>
+    <div class="legend-item"><span class="legend-badge t2">P1 常用</span><span>文档增强与内容创作，每周多次使用</span></div>
+    <div class="legend-item"><span class="legend-badge t3">P2 中频</span><span>项目管理与开发流程，按需触发</span></div>
+    <div class="legend-item"><span class="legend-badge t4">P3 低频</span><span>学术研究与专业工具，特定场景触发</span></div>
+    <div class="legend-item"><span class="legend-badge t5">P4 基础设施</span><span>技能系统与工具维护，偶尔使用</span></div>
+    <div class="legend-item"><span class="legend-badge t6">P5 专业</span><span>高级开发与专业领域，极少使用</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <h2>使用说明</h2>
+  <p style="font-size:14px;color:var(--text-secondary);line-height:1.8">
+    大部分 Skill 会在你描述任务时自动触发，无需手动调用。如果想显式调用某个技能，可以使用 <code style="background:#f1f3f5;padding:2px 6px;border-radius:4px;font-size:13px">/+技能名</code> 的方式。
+    技能名前带 <code style="background:#f1f3f5;padding:2px 6px;border-radius:4px;font-size:13px">/</code> 的为内置技能，不带 <code style="background:#f1f3f5;padding:2px 6px;border-radius:4px;font-size:13px">/</code> 的为用户安装技能。
+  </p>
+</div>
+
+
+<div class="prio-section" data-prio="P0 核心">
+  <div class="prio-header">
+    <span class="level t1">P0 核心</span>
+    <h2>P0 核心</h2>
+  </div>
+  <div class="prio-count">日常办公最高频使用，几乎每天都会触发 · 共 7 个技能</div>
+  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 文档处理</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="docx" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">docx</div>
+      <div class="desc">创建、读取、编辑 Word 文档（.docx），生成带格式的报告、备忘录、信件等</div>
+      <div class="trigger">触发：提到 Word 文档、.docx 文件、生成带格式报告</div>
+    </div>
+    <div class="skill-card" data-name="pdf" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">pdf</div>
+      <div class="desc">PDF 文件处理：读取、提取文本/表格、合并、拆分、旋转、加水印、创建、填表、加密解密、OCR</div>
+      <div class="trigger">触发：处理 PDF 文件、提到 .pdf 文件</div>
+    </div>
+    <div class="skill-card" data-name="xlsx" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">xlsx</div>
+      <div class="desc">Excel/CSV/TSV 文件处理：打开、读取、编辑、创建电子表格、清理表格数据</div>
+      <div class="trigger">触发：处理 Excel/CSV 文件、创建电子表格</div>
+    </div>
+    <div class="skill-card" data-name="pptx" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">pptx</div>
+      <div class="desc">创建、读取、编辑演示文稿（PPT/PPTX），处理幻灯片、演示文稿</div>
+      <div class="trigger">触发：提到 PPT、幻灯片、演示文稿、presentation</div>
+    </div>
+    <div class="skill-card" data-name="file-conversion" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">file-conversion</div>
+      <div class="desc">文件格式转换：PDF→Word、HEIC→JPG、MP4→MP3、CSV→JSON、EPUB→MOBI 等</div>
+      <div class="trigger">触发：要求转换文件格式</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 浏览器与自动化</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="Abu-Browser" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">Abu-Browser</div>
+      <div class="desc">操作用户真实的 Chrome 浏览器：点击、填写、截图、提取数据、填写表单、浏览器自动化</div>
+      <div class="trigger">触发：要求操作浏览器、抓取网页内容、网页截图、填写表单</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 技能系统</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="using-superpowers" data-prio="P0 核心">
+      <span class="badge t1">P0 核心</span>
+      <div class="name">using-superpowers</div>
+      <div class="desc">每次对话开始时自动调用，建立技能发现与使用机制</div>
+      <div class="trigger">触发：每次新对话开始时自动触发</div>
+    </div></div></div></div>
+<div class="prio-section" data-prio="P1 常用">
+  <div class="prio-header">
+    <span class="level t2">P1 常用</span>
+    <h2>P1 常用</h2>
+  </div>
+  <div class="prio-count">文档增强与内容创作，每周多次使用 · 共 12 个技能</div>
+  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 文档处理</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="doc-video-duration" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">doc-video-duration</div>
+      <div class="desc">扫描 Word 文档中所有视频链接（B站/微信视频号），通过 B站 API 查询真实时长并替换占位时长</div>
+      <div class="trigger">触发：为文档中视频核对/添加/替换时长</div>
+    </div>
+    <div class="skill-card" data-name="doc-video-summary" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">doc-video-summary</div>
+      <div class="desc">扫描 Word 文档中所有视频材料，逐一检索视频内容概括并追加到每个视频条目后</div>
+      <div class="trigger">触发：为文档中视频补充/生成内容概括、摘要</div>
+    </div>
+    <div class="skill-card" data-name="translate-book" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">translate-book</div>
+      <div class="desc">整本书籍翻译（PDF/DOCX/EPUB），支持多语言、分章处理、术语表管理</div>
+      <div class="trigger">触发：要求翻译整本书籍、外文文献</div>
+    </div>
+    <div class="skill-card" data-name="learning-discussion-analysis" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">learning-discussion-analysis</div>
+      <div class="desc">根据学习文档中的讨论问题，结合文档内容与网络调研，逐题详细分析，生成带格式的 Word 文档</div>
+      <div class="trigger">触发：回答/分析学习文档中的讨论问题、思考题</div>
+    </div>
+    <div class="skill-card" data-name="doc-coauthoring" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">doc-coauthoring</div>
+      <div class="desc">引导用户通过结构化工作流协作撰写文档</div>
+      <div class="trigger">触发：需要协作撰写文档</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 内容创作与可视化</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="beautiful-article" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">beautiful-article</div>
+      <div class="desc">把素材（网页/PDF/DOCX/Markdown/文本/截图）编辑设计成美丽的、可离线打开的单文件 HTML 网页文章</div>
+      <div class="trigger">触发：要求把内容做成美观的文章、HTML 网页</div>
+    </div>
+    <div class="skill-card" data-name="educational-html-visualization" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">educational-html-visualization</div>
+      <div class="desc">将理论/教材/学习内容转化为结构清晰、视觉友好的教育型 HTML 可视化文件</div>
+      <div class="trigger">触发：要求将理论/概念做成 HTML 图、可视化、教学示意图</div>
+    </div>
+    <div class="skill-card" data-name="frontend-slides" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">frontend-slides</div>
+      <div class="desc">从零创建或从 PowerPoint 文件转换，生成动画丰富的 HTML 演示文稿</div>
+      <div class="trigger">触发：要求创建 HTML 演示文稿、网页 PPT</div>
+    </div>
+    <div class="skill-card" data-name="excalidraw-diagram" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">excalidraw-diagram</div>
+      <div class="desc">将文字内容生成 Excalidraw 手绘风格图表，支持 Obsidian/标准/动画三种模式</div>
+      <div class="trigger">触发：要求生成 Excalidraw 图、手绘风格图表</div>
+    </div>
+    <div class="skill-card" data-name="mermaid-visualizer" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">mermaid-visualizer</div>
+      <div class="desc">将文字内容转换为专业 Mermaid 图表（流程图/时序图/状态图/甘特图等）</div>
+      <div class="trigger">触发：要求生成 Mermaid 图表、流程图、时序图</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 浏览器与自动化</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="schedule" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">schedule</div>
+      <div class="desc">创建和管理定时任务，设置定期自动执行的操作（每天/每周/每小时）</div>
+      <div class="trigger">触发：要求定时、定期执行某个操作</div>
+    </div>
+    <div class="skill-card" data-name="cn-quote-protector" data-prio="P1 常用">
+      <span class="badge t2">P1 常用</span>
+      <div class="name">cn-quote-protector</div>
+      <div class="desc">保护 Python 脚本中的中文引号，自动替换为 Unicode 转义序列，防止语法错误</div>
+      <div class="trigger">触发：写入包含中文引号的 Python 脚本</div>
+    </div></div></div></div>
+<div class="prio-section" data-prio="P2 中频">
+  <div class="prio-header">
+    <span class="level t3">P2 中频</span>
+    <h2>P2 中频</h2>
+  </div>
+  <div class="prio-count">项目管理与开发流程，按需触发 · 共 30 个技能</div>
+  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 内容创作与可视化</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="guizang-ppt-skill" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">guizang-ppt-skill</div>
+      <div class="desc">生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板</div>
+      <div class="trigger">触发：要求生成网页 PPT、横向翻页演示</div>
+    </div>
+    <div class="skill-card" data-name="ppt-master" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">ppt-master</div>
+      <div class="desc">AI 驱动的演示文稿生成工作流，生成可编辑的 PPTX，创建可复用的品牌/风格/布局模板</div>
+      <div class="trigger">触发：要求生成 PPTX 演示文稿</div>
+    </div>
+    <div class="skill-card" data-name="qiaomu-anything-to-notebooklm" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">qiaomu-anything-to-notebooklm</div>
+      <div class="desc">多源内容智能处理器：微信公众号、网页、YouTube、播客、PDF、Markdown 等，自动上传到 NotebookLM 生成播客/PPT/思维导图</div>
+      <div class="trigger">触发：要求将内容上传到 NotebookLM</div>
+    </div>
+    <div class="skill-card" data-name="defuddle" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">defuddle</div>
+      <div class="desc">使用 Defuddle CLI 从网页中提取干净的 Markdown 内容，去除杂乱导航和广告</div>
+      <div class="trigger">触发：要求提取网页正文内容</div>
+    </div>
+    <div class="skill-card" data-name="internal-comms" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">internal-comms</div>
+      <div class="desc">帮助撰写各类内部通信文档，使用规范格式</div>
+      <div class="trigger">触发：要求撰写内部通信</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 浏览器与自动化</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="trigger" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">trigger</div>
+      <div class="desc">创建和管理触发器，设置事件驱动的自动化任务，监听文件/目录变化</div>
+      <div class="trigger">触发：要求事件驱动、监听文件变化自动执行</div>
+    </div>
+    <div class="skill-card" data-name="alert-sop" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">alert-sop</div>
+      <div class="desc">自动分析告警信息，按 SOP 排查问题并生成处理报告</div>
+      <div class="trigger">触发：收到告警消息需要排查处理</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 项目管理与脚手架</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="office-project-scaffold" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">office-project-scaffold</div>
+      <div class="desc">为自动化办公项目初始化标准目录结构（任务看板+需求/输入/工作区/产出/已交付/归档），按任务规模分级</div>
+      <div class="trigger">触发：要求新建办公项目目录、初始化项目结构</div>
+    </div>
+    <div class="skill-card" data-name="research-project-scaffold" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">research-project-scaffold</div>
+      <div class="desc">为科研/AI 代码项目初始化标准目录结构（文档/数据/代码/模型/图表/日志）</div>
+      <div class="trigger">触发：要求新建科研项目目录、初始化科研项目结构</div>
+    </div>
+    <div class="skill-card" data-name="init" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">init</div>
+      <div class="desc">初始化工作区规则文件 (.abu/ABU.md)，分析项目结构生成项目规则模板</div>
+      <div class="trigger">触发：要求初始化工作区规则</div>
+    </div>
+    <div class="skill-card" data-name="beijing-edu-job-collector" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">beijing-edu-job-collector</div>
+      <div class="desc">采集北京教育行业校招及社招岗位，从 BOSS直聘/猎聘/智联招聘/人社局等渠道搜索，按薪资过滤输出清单</div>
+      <div class="trigger">触发：要求查找/采集北京教育行业招聘信息</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 开发流程</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="brainstorming" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">brainstorming</div>
+      <div class="desc">创建功能、构建组件、添加函数前的创意脑爆，必须在任何创意工作之前使用</div>
+      <div class="trigger">触发：创建功能/构建组件前的脑爆</div>
+    </div>
+    <div class="skill-card" data-name="writing-plans" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">writing-plans</div>
+      <div class="desc">有规格/需求时，在写代码前编写多步骤实施计划</div>
+      <div class="trigger">触发：有规格需求，需要编写实施计划</div>
+    </div>
+    <div class="skill-card" data-name="executing-plans" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">executing-plans</div>
+      <div class="desc">在单独会话中执行已编写好的实施计划，含审查检查点</div>
+      <div class="trigger">触发：有实施计划需要执行</div>
+    </div>
+    <div class="skill-card" data-name="verification-before-completion" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">verification-before-completion</div>
+      <div class="desc">在声称工作完成/修复/通过之前，验证工作确实满足要求</div>
+      <div class="trigger">触发：即将声称工作完成时</div>
+    </div>
+    <div class="skill-card" data-name="dispatching-parallel-agents" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">dispatching-parallel-agents</div>
+      <div class="desc">面对 2+ 个独立任务时，分派并行代理同时处理</div>
+      <div class="trigger">触发：有多个独立任务需要并行处理</div>
+    </div>
+    <div class="skill-card" data-name="subagent-driven-development" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">subagent-driven-development</div>
+      <div class="desc">在当前会话中执行含独立任务的实施计划</div>
+      <div class="trigger">触发：执行含独立任务的计划</div>
+    </div>
+    <div class="skill-card" data-name="test-driven-development" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">test-driven-development</div>
+      <div class="desc">实现功能或修复前先写测试代码的 TDD 方法</div>
+      <div class="trigger">触发：实现功能/修复 bug 前的测试</div>
+    </div>
+    <div class="skill-card" data-name="debug" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">debug</div>
+      <div class="desc">ML 实验失败时的系统化诊断：先查证据（进程/日志/GPU/检查点），再提出假设</div>
+      <div class="trigger">触发：遇到 ML 实验失败、bug、异常行为</div>
+    </div>
+    <div class="skill-card" data-name="systematic-debugging" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">systematic-debugging</div>
+      <div class="desc">遇到 bug、测试失败或意外行为时的系统化调试方法</div>
+      <div class="trigger">触发：遇到 bug/测试失败/意外行为</div>
+    </div>
+    <div class="skill-card" data-name="using-git-worktrees" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">using-git-worktrees</div>
+      <div class="desc">开始需要与当前工作区隔离的功能开发时，使用 Git worktree</div>
+      <div class="trigger">触发：功能开发需要隔离工作区</div>
+    </div>
+    <div class="skill-card" data-name="finishing-a-development-branch" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">finishing-a-development-branch</div>
+      <div class="desc">实现完成、测试通过后，决定如何集成工作到主分支</div>
+      <div class="trigger">触发：开发分支完成，需要集成</div>
+    </div>
+    <div class="skill-card" data-name="requesting-code-review" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">requesting-code-review</div>
+      <div class="desc">完成任务、实现主要功能或合并前，验证工作满足要求</div>
+      <div class="trigger">触发：完成任务后请求代码审查</div>
+    </div>
+    <div class="skill-card" data-name="receiving-code-review" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">receiving-code-review</div>
+      <div class="desc">收到代码审查反馈后，在实施建议之前使用</div>
+      <div class="trigger">触发：收到代码审查反馈</div>
+    </div>
+    <div class="skill-card" data-name="webapp-testing" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">webapp-testing</div>
+      <div class="desc">使用 Playwright 与本地 Web 应用交互和测试</div>
+      <div class="trigger">触发：需要测试本地 Web 应用</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 专业工具集成</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="cli-anything-wps" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">cli-anything-wps</div>
+      <div class="desc">WPS Office CLI — JSON 数据驱动 PPT 自动生成 + 命令行操控 WPS 文字/表格/演示文稿</div>
+      <div class="trigger">触发：要求操控 WPS Office</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 技能系统与元工具</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="skill-creator" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">skill-creator</div>
+      <div class="desc">创建、编辑、优化和测试 skills</div>
+      <div class="trigger">触发：要求创建/编辑/测试某个具体 skill</div>
+    </div>
+    <div class="skill-card" data-name="writing-skills" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">writing-skills</div>
+      <div class="desc">创建新技能、编辑已有技能、验证技能可用性</div>
+      <div class="trigger">触发：要求编写/编辑 skill</div>
+    </div>
+    <div class="skill-card" data-name="install-github-skill" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">install-github-skill</div>
+      <div class="desc">从 GitHub 仓库安装 Skill 到 Abu 工具箱的完整流程</div>
+      <div class="trigger">触发：要求从 GitHub 安装 skill</div>
+    </div>
+    <div class="skill-card" data-name="reflect" data-prio="P2 中频">
+      <span class="badge t3">P2 中频</span>
+      <div class="name">reflect</div>
+      <div class="desc">复盘当前对话——回顾任务过程、总结经验教训、主动沉淀可复用的 skill</div>
+      <div class="trigger">触发：要求复盘/反思/回顾本次对话</div>
+    </div></div></div></div>
+<div class="prio-section" data-prio="P3 低频">
+  <div class="prio-header">
+    <span class="level t4">P3 低频</span>
+    <h2>P3 低频</h2>
+  </div>
+  <div class="prio-count">学术研究与专业工具，特定场景触发 · 共 36 个技能</div>
+  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 网络智能工具</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="wigolo" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo</div>
+      <div class="desc">Local-first 网页智能套件：统一入口，用于所有网页搜索、抓取、提取操作</div>
+      <div class="trigger">触发：要求搜索/抓取/获取网页内容</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-search" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-search</div>
+      <div class="desc">本地优先网页搜索，ML 重排序、多查询数组、域名界定、短语精确匹配</div>
+      <div class="trigger">触发：要求搜索网页、精确短语搜索</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-fetch" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-fetch</div>
+      <div class="desc">本地优先 URL 抓取：干净 Markdown 输出、结构化元数据、JS 渲染 SPA 支持</div>
+      <div class="trigger">触发：要求抓取/获取某个网页 URL 内容</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-extract" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-extract</div>
+      <div class="desc">本地优先结构化提取：从任意网页提取表格、定义列表、键值对、JSON</div>
+      <div class="trigger">触发：要求从网页提取表格/结构化数据</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-crawl" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-crawl</div>
+      <div class="desc">本地优先多页面抓取，支持 sitemap、BFS、DFS、URL-map 策略</div>
+      <div class="trigger">触发：要求批量抓取/爬取多个网页</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-cache" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-cache</div>
+      <div class="desc">本地优先知识缓存：对 wigolo 已见过的每个页面做全文本+混合语义搜索</div>
+      <div class="trigger">触发：要求搜索已缓存/已查看过的页面</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-research" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-research</div>
+      <div class="desc">本地优先多步调研：问题拆解、并行搜索、结构化简报交付</div>
+      <div class="trigger">触发：要求做多步骤网络调研/研究</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-agent" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-agent</div>
+      <div class="desc">跨来源自主数据收集：从自然语言需求规划搜索查询和 URL</div>
+      <div class="trigger">触发：要求自主收集多个来源的数据</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-diff" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-diff</div>
+      <div class="desc">对比页面的两个版本看差异：实时 URL 对照缓存副本</div>
+      <div class="trigger">触发：要求对比网页前后差异/变化</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-find-similar" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-find-similar</div>
+      <div class="desc">混合语义发现：融合嵌入+关键词+实时网络搜索的三路查找</div>
+      <div class="trigger">触发：要求找相似页面/相关内容</div>
+    </div>
+    <div class="skill-card" data-name="wigolo-watch" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">wigolo-watch</div>
+      <div class="desc">监控页面随时间变化：对一个或多个 URL 创建惰性监听任务</div>
+      <div class="trigger">触发：要求监控网页变化/定时检查页面</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 学术研究与知识管理</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="research-paper-writing" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">research-paper-writing</div>
+      <div class="desc">提升 ML/CV/NLP 风格学术论文的写作质量，改善段落结构和行文</div>
+      <div class="trigger">触发：要求改进学术论文写作</div>
+    </div>
+    <div class="skill-card" data-name="paper-writing" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">paper-writing</div>
+      <div class="desc">学术论文全流程写作：选题、摘要、方法论、实验、结论，支持 LaTeX/Markdown 输出</div>
+      <div class="trigger">触发：要求撰写学术论文、论文写作</div>
+    </div>
+    <div class="skill-card" data-name="paper-verification" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">paper-verification</div>
+      <div class="desc">验证论文声明与代码/数据的一致性，审计数字准确性</div>
+      <div class="trigger">触发：要求核实论文声明、审计论文数据</div>
+    </div>
+    <div class="skill-card" data-name="paperjury" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">paperjury</div>
+      <div class="desc">CS 会议论文（CVPR/ACL/NeurIPS 等）的审稿与编辑：直接编辑模式、对抗式审稿模式、自动模式</div>
+      <div class="trigger">触发：要求审稿/评审/编辑 CS 会议论文</div>
+    </div>
+    <div class="skill-card" data-name="literature-research" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">literature-research</div>
+      <div class="desc">系统性文献调研：领域综述、文献缺口识别、相关工作梳理</div>
+      <div class="trigger">触发：要求文献调研、梳理领域文献</div>
+    </div>
+    <div class="skill-card" data-name="experiment-design" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">experiment-design</div>
+      <div class="desc">实验设计：消融实验、基线对比、参数敏感性分析的结构化设计</div>
+      <div class="trigger">触发：要求设计实验、消融实验</div>
+    </div>
+    <div class="skill-card" data-name="reproduce" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">reproduce</div>
+      <div class="desc">从 arXiv URL 到完整复现：代码获取、数据准备、冒烟测试、复现实验</div>
+      <div class="trigger">触发：要求复现论文、跑通论文代码</div>
+    </div>
+    <div class="skill-card" data-name="compare" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">compare</div>
+      <div class="desc">同阶段训练任务对比（wandb/neptune/tensorboard/mlflow），对齐到学生当前步数</div>
+      <div class="trigger">触发：要求对比训练任务、实验对比</div>
+    </div>
+    <div class="skill-card" data-name="dataset-curation" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">dataset-curation</div>
+      <div class="desc">数据集分析、偏差检测、分层采样、公平性评估</div>
+      <div class="trigger">触发：要求分析数据集偏差、创建分层样本</div>
+    </div>
+    <div class="skill-card" data-name="research-publishing" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">research-publishing</div>
+      <div class="desc">论文投稿发表全流程：开源代码准备、可复现性保障、论文发表</div>
+      <div class="trigger">触发：要求准备论文开源代码、发表论文</div>
+    </div>
+    <div class="skill-card" data-name="reviewer-defense" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">reviewer-defense</div>
+      <div class="desc">预判审稿人问题、选择最强消融实验、准备答辩材料</div>
+      <div class="trigger">触发：要求准备审稿答辩、预判审稿人问题</div>
+    </div>
+    <div class="skill-card" data-name="latex-setup" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">latex-setup</div>
+      <div class="desc">LaTeX 环境搭建与排错：biber/bibtex 选择、模板配置、编译问题排查</div>
+      <div class="trigger">触发：要求搭建/排错 LaTeX 环境</div>
+    </div>
+    <div class="skill-card" data-name="launch" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">launch</div>
+      <div class="desc">ML 训练任务预飞行检查清单：配置 diff、任务命名、路径验证、监控设置、重启清理</div>
+      <div class="trigger">触发：要求启动/启动 ML 训练任务</div>
+    </div>
+    <div class="skill-card" data-name="tutor" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">tutor</div>
+      <div class="desc">知识辅导与测验：根据 Obsidian 笔记生成测验题，交互式学习效果检验</div>
+      <div class="trigger">触发：要求知识测验、学习检验</div>
+    </div>
+    <div class="skill-card" data-name="tutor-setup" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">tutor-setup</div>
+      <div class="desc">Obsidian 学习库初始化：代码库/文档转知识管理，含质量检查清单</div>
+      <div class="trigger">触发：要求初始化学习库、导入知识源</div>
+    </div>
+    <div class="skill-card" data-name="3-statement-model" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">3-statement-model</div>
+      <div class="desc">完成和填充三表财务模型模板（利润表、资产负债表、现金流量表）</div>
+      <div class="trigger">触发：要求填写/完成财务模型模板</div>
+    </div>
+    <div class="skill-card" data-name="obsidian-cli" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">obsidian-cli</div>
+      <div class="desc">使用 Obsidian CLI 读取、创建、搜索和管理笔记、任务</div>
+      <div class="trigger">触发：要求操作 Obsidian 笔记库</div>
+    </div>
+    <div class="skill-card" data-name="obsidian-bases" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">obsidian-bases</div>
+      <div class="desc">创建和编辑 Obsidian Bases（.base 文件），含视图、过滤器、公式和摘要</div>
+      <div class="trigger">触发：要求创建 Obsidian Base 视图</div>
+    </div>
+    <div class="skill-card" data-name="obsidian-markdown" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">obsidian-markdown</div>
+      <div class="desc">创建和编辑 Obsidian 风格 Markdown，含 wikilinks、嵌入、标注、属性等</div>
+      <div class="trigger">触发：要求编辑 Obsidian Markdown</div>
+    </div>
+    <div class="skill-card" data-name="obsidian-canvas-creator" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">obsidian-canvas-creator</div>
+      <div class="desc">从文字内容创建 Obsidian Canvas 文件，支持思维导图和自由布局</div>
+      <div class="trigger">触发：要求创建 Canvas 画布、思维导图</div>
+    </div>
+    <div class="skill-card" data-name="json-canvas" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">json-canvas</div>
+      <div class="desc">创建和编辑 JSON Canvas 文件（.canvas），含节点、边、组和连接</div>
+      <div class="trigger">触发：要求创建 JSON Canvas</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 专业工具集成</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="cli-anything-photoshop" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">cli-anything-photoshop</div>
+      <div class="desc">通过 COM 自动化操控 Adobe Photoshop：项目管理、图层操作、选区控制、文字编辑、图像调整、多格式导出</div>
+      <div class="trigger">触发：要求操控 Photoshop</div>
+    </div>
+    <div class="skill-card" data-name="cli-anything-zotero" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">cli-anything-zotero</div>
+      <div class="desc">Zotero CLI — 文献管理、引用、学术搜索，通过 COM 自动化操控 Zotero 本地数据</div>
+      <div class="trigger">触发：要求操控 Zotero</div>
+    </div>
+    <div class="skill-card" data-name="codex-windows-fast-patch" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">codex-windows-fast-patch</div>
+      <div class="desc">修复和重新应用 Windows Codex Desktop 升级后的自定义配置</div>
+      <div class="trigger">触发：Codex Desktop 需要修复</div>
+    </div>
+    <div class="skill-card" data-name="mcp-builder" data-prio="P3 低频">
+      <span class="badge t4">P3 低频</span>
+      <div class="name">mcp-builder</div>
+      <div class="desc">创建高质量 MCP（Model Context Protocol）服务器的指南，使 LLM 能与工具和数据源互动</div>
+      <div class="trigger">触发：要求创建 MCP 服务器</div>
+    </div></div></div></div>
+<div class="prio-section" data-prio="P5 专业">
+  <div class="prio-header">
+    <span class="level t6">P5 专业</span>
+    <h2>P5 专业</h2>
+  </div>
+  <div class="prio-count">高级开发与专业领域，极少使用 · 共 11 个技能</div>
+  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 高级开发与设计</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="frontend-design" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">frontend-design</div>
+      <div class="desc">创建独特的、生产级的前端界面，具有高设计质量</div>
+      <div class="trigger">触发：要求创建前端界面</div>
+    </div>
+    <div class="skill-card" data-name="web-artifacts-builder" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">web-artifacts-builder</div>
+      <div class="desc">使用现代前端技术创建精致的多组件 HTML 件</div>
+      <div class="trigger">触发：要求创建 HTML 件</div>
+    </div>
+    <div class="skill-card" data-name="claude-api" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">claude-api</div>
+      <div class="desc">使用 Claude API 或 Anthropic SDK 构建应用</div>
+      <div class="trigger">触发：代码导入 anthropic SDK</div>
+    </div>
+    <div class="skill-card" data-name="algorithmic-art" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">algorithmic-art</div>
+      <div class="desc">使用 p5.js 创建带种子随机性和交互参数探索的算法艺术</div>
+      <div class="trigger">触发：要求创建算法艺术</div>
+    </div>
+    <div class="skill-card" data-name="canvas-design" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">canvas-design</div>
+      <div class="desc">使用设计哲学在 .png 和 .pdf 文档中创建美丽的视觉艺术</div>
+      <div class="trigger">触发：要求创建视觉艺术作品</div>
+    </div>
+    <div class="skill-card" data-name="brand-guidelines" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">brand-guidelines</div>
+      <div class="desc">应用 Anthropic 官方品牌颜色和排版到各类作品</div>
+      <div class="trigger">触发：要求应用品牌指南</div>
+    </div>
+    <div class="skill-card" data-name="theme-factory" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">theme-factory</div>
+      <div class="desc">为幻灯片、文档、报告、HTML 等作品应用主题样式</div>
+      <div class="trigger">触发：要求为作品应用主题</div>
+    </div>
+    <div class="skill-card" data-name="slack-gif-creator" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">slack-gif-creator</div>
+      <div class="desc">创建为 Slack 优化的动画 GIF</div>
+      <div class="trigger">触发：要求创建 Slack GIF</div>
+    </div>
+    <div class="skill-card" data-name="gpt-image-2" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">gpt-image-2</div>
+      <div class="desc">面向 GPT Image 2 的图像生成/编辑：Garden 本地出图、Host-Native 委托出图、Advisor 纯提示词顾问</div>
+      <div class="trigger">触发：要求生成/编辑图像</div>
+    </div></div></div>  <div class="category" style="border:1px solid var(--border);margin-bottom:16px;padding:16px;border-radius:10px;"><div class="category-header" style="padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)"><h2 style="font-size:16px">▶ 数据与 API 集成</h2></div><div class="skill-grid">
+    <div class="skill-card" data-name="preset-cortex-agents" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">preset-cortex-agents</div>
+      <div class="desc">使用 Snowflake Cortex Agent REST 和 SQL API 管理和运行 agents</div>
+      <div class="trigger">触发：要求使用 Snowflake Cortex Agents</div>
+    </div>
+    <div class="skill-card" data-name="preset-sql-execution" data-prio="P5 专业">
+      <span class="badge t6">P5 专业</span>
+      <div class="name">preset-sql-execution</div>
+      <div class="desc">运行或路由 SQL Lab 执行、结果检索、导出、查询停止等</div>
+      <div class="trigger">触发：要求执行 SQL 查询</div>
+    </div></div></div></div>
+
+<div class="footer">
+  <p>Abu Skill 使用指南 · 共 <strong>96</strong> 个技能 · 6 级优先级 · 12 个功能分类</p>
+  <p class="generated">生成时间：2026年8月21日</p>
+</div>
+
+</div>
+
+<script>
+function filterSkills() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const cards = document.querySelectorAll('.skill-card');
+  const sections = document.querySelectorAll('.prio-section');
+  let visible = 0;
+  
+  if (!q) {
+    cards.forEach(c => c.style.display = '');
+    sections.forEach(s => s.style.display = '');
+    document.getElementById('match-count').textContent = '';
+    return;
+  }
+  
+  cards.forEach(c => {
+    const text = (c.querySelector('.name').textContent + ' ' + c.querySelector('.desc').textContent + ' ' + c.querySelector('.trigger').textContent).toLowerCase();
+    if (text.includes(q)) { c.style.display = ''; visible++; }
+    else { c.style.display = 'none'; }
+  });
+  
+  sections.forEach(s => {
+    const hasVisible = s.querySelectorAll('.skill-card:not([style*="display: none"])').length > 0;
+    s.style.display = hasVisible ? '' : 'none';
+  });
+  
+  document.getElementById('match-count').textContent = visible > 0 ? '\u627e\u5230 ' + visible + '\u4e2a\u5339\u914d' : '\u672a\u627e\u5230\u5339\u914d';
+}
+</script>
+</body>
+</html>

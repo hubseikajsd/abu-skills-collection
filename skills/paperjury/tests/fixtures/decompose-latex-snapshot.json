@@ -1,0 +1,42 @@
+{
+  "passages": [
+    {
+      "passage_id": "frontmatter#p1#6318edb1",
+      "section_path": "frontmatter",
+      "section_title": "Front matter",
+      "ordinal": 1,
+      "label": null,
+      "in_abstract": true,
+      "char_start": 63,
+      "text": "\\maketitle\n\\begin{abstract}\nThis is a small manuscript used by the paperjury test suite.\n\\end{abstract}"
+    },
+    {
+      "passage_id": "1#p1#c20041c7",
+      "section_path": "1",
+      "section_title": "Introduction",
+      "ordinal": 1,
+      "label": "sec:intro",
+      "in_abstract": false,
+      "char_start": 190,
+      "text": "\\label{sec:intro}\nPaperJury needs a valid main file for install health checks.\n\\end{document}"
+    }
+  ],
+  "units": [
+    {
+      "section_path": "frontmatter",
+      "section_title": "Front matter",
+      "passage_ids": [
+        "frontmatter#p1#6318edb1"
+      ],
+      "text": "\\maketitle\n\\begin{abstract}\nThis is a small manuscript used by the paperjury test suite.\n\\end{abstract}"
+    },
+    {
+      "section_path": "1",
+      "section_title": "Introduction",
+      "passage_ids": [
+        "1#p1#c20041c7"
+      ],
+      "text": "\\label{sec:intro}\nPaperJury needs a valid main file for install health checks.\n\\end{document}"
+    }
+  ]
+}

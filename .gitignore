@@ -1,6 +1,10 @@
-﻿.git-credentials-tmp
+.git-credentials-tmp
 push_all.ps1
 push_all.log
 push_all.err
-credentials/
 push_batch.ps1
+push_small.ps1
+push_api.py
+push_test.log
+push_test.err
+credentials/

@@ -3,3 +3,4 @@ push_all.ps1
 push_all.log
 push_all.err
 credentials/
+push_batch.ps1

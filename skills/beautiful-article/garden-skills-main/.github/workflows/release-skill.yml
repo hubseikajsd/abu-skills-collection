@@ -1,0 +1,162 @@
+name: Release Skill
+
+# Tag-driven per-skill release.
+#
+#   git tag web-design-engineer-v1.2.0
+#   git push origin web-design-engineer-v1.2.0
+#
+# This workflow:
+#   1. Parses the tag to extract <skill> and <version>.
+#   2. Validates the manifest version matches the tag (no drift) and packs
+#      skills/<skill>/ into <skill>-<version>.zip + .sha256 via `npm run pack`.
+#   3. Generates release notes from `git log` since the previous tag of this
+#      same skill (falls back to all-history on the first release).
+#   4. Creates a GitHub Release with the zip + sha256 attached.
+#   5. Re-renders the inline `Download v<version> .zip` link in localized
+#      READMEs via `npm run readme:sync` and pushes the change back to the
+#      default branch.
+#
+# See CONTRIBUTING.md for the full release flow (and `cut-release.mjs` which
+# automates the maintainer-side bump + tag + push).
+
+on:
+  push:
+    tags:
+      # GitHub Actions matches tags via minimatch + extglob. A bare `+`
+      # after a char class is a literal `+`, NOT "one or more". So we use
+      # a permissive `*-v*` here and let the parse step below validate the
+      # exact `<skill>-v<MAJOR>.<MINOR>.<PATCH>[-prerelease]` shape.
+      - "*-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for changelog)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Parse tag
+        id: parse
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if [[ ! "$TAG" =~ ^([a-z0-9][a-z0-9-]*[a-z0-9])-v([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?)$ ]]; then
+            echo "::error title=Invalid tag::Tag '$TAG' does not match <skill>-v<semver>"
+            exit 1
+          fi
+          SKILL="${BASH_REMATCH[1]}"
+          VERSION="${BASH_REMATCH[2]}"
+          echo "skill=$SKILL" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "::notice title=Releasing::$SKILL @ $VERSION (tag=$TAG)"
+
+      - name: Verify skill exists
+        run: |
+          test -d "skills/${{ steps.parse.outputs.skill }}" || {
+            echo "::error::skills/${{ steps.parse.outputs.skill }}/ does not exist"
+            exit 1
+          }
+          test -f "skills/${{ steps.parse.outputs.skill }}/manifest.json" || {
+            echo "::error::manifest.json is missing for ${{ steps.parse.outputs.skill }}"
+            exit 1
+          }
+
+      - name: Pack skill
+        run: |
+          npm run pack -- \
+            --skill "${{ steps.parse.outputs.skill }}" \
+            --version "${{ steps.parse.outputs.version }}" \
+            --out dist/release
+
+      - name: Generate release notes
+        id: notes
+        env:
+          SKILL: ${{ steps.parse.outputs.skill }}
+          VERSION: ${{ steps.parse.outputs.version }}
+          TAG: ${{ steps.parse.outputs.tag }}
+        run: |
+          # Find the previous tag for this same skill, if any.
+          PREV_TAG=$(git tag --list "${SKILL}-v*" --sort=-v:refname \
+            | grep -v "^${TAG}$" \
+            | head -n 1 || true)
+
+          {
+            echo "## ${SKILL} v${VERSION}"
+            echo
+            if [ -n "$PREV_TAG" ]; then
+              echo "Changes since [\`${PREV_TAG}\`](https://github.com/${GITHUB_REPOSITORY}/releases/tag/${PREV_TAG}):"
+              echo
+              git log --pretty=format:"- %s (%h)" "${PREV_TAG}..${TAG}" -- "skills/${SKILL}/" || true
+            else
+              echo "Initial release."
+              echo
+              git log --pretty=format:"- %s (%h)" "${TAG}" -- "skills/${SKILL}/" | head -n 30 || true
+            fi
+            echo
+            echo
+            echo "### Install"
+            echo
+            echo '```bash'
+            echo "# via skills CLI (any agent)"
+            echo "npx skills add ${GITHUB_REPOSITORY}/tree/${TAG}/skills/${SKILL}"
+            echo
+            echo "# or download the pinned zip directly"
+            echo "curl -fsSL -o ${SKILL}.zip \\"
+            echo "  https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/${SKILL}-${VERSION}.zip"
+            echo "unzip ${SKILL}.zip -d .claude/skills/   # or .agents/skills/, .codex/skills/, etc."
+            echo '```'
+            echo
+            SHA=$(awk '{print $1}' "dist/release/${SKILL}-${VERSION}.zip.sha256")
+            echo "**SHA-256:** \`${SHA}\`"
+          } > release-notes.md
+
+          echo "notes_path=release-notes.md" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKILL: ${{ steps.parse.outputs.skill }}
+          VERSION: ${{ steps.parse.outputs.version }}
+          TAG: ${{ steps.parse.outputs.tag }}
+        run: |
+          gh release create "$TAG" \
+            --title "$SKILL v$VERSION" \
+            --notes-file release-notes.md \
+            "dist/release/${SKILL}-${VERSION}.zip" \
+            "dist/release/${SKILL}-${VERSION}.zip.sha256"
+
+      - name: Sync README download links and push back to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKILL: ${{ steps.parse.outputs.skill }}
+          VERSION: ${{ steps.parse.outputs.version }}
+        run: |
+          # Always switch to the default branch first — when the workflow was
+          # triggered by a tag push, HEAD is detached at the tag, not on main.
+          DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
+          git fetch origin "$DEFAULT_BRANCH"
+          git checkout "$DEFAULT_BRANCH"
+          git pull --ff-only origin "$DEFAULT_BRANCH"
+
+          npm run readme:sync
+
+          if [ -z "$(git status --porcelain README.md README.zh-CN.md README.ja-JP.md)" ]; then
+            echo "README already in sync — nothing to commit."
+            exit 0
+          fi
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md README.zh-CN.md README.ja-JP.md
+          git commit -m "docs(readme): sync download links for ${SKILL} v${VERSION}"
+          git push origin "$DEFAULT_BRANCH"

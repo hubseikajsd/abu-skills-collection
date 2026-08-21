@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LIN YUE · 林月 — AI-Enhanced Photography</title>
+  <meta name="description" content="独立摄影师林月的个人作品集 — 人像、风光、城市与 AI 创成式影像。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;400;600&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <span class="nav__logo-mark">林月</span>
+        <span class="nav__logo-name">/ AI</span>
+      </a>
+      <nav class="nav__menu" aria-label="Main Navigation">
+        <a href="#works">OUTPUTS</a>
+        <a href="#about">ABOUT</a>
+        <a href="#services">MODELS</a>
+        <a href="#journal">LOGS</a>
+      </nav>
+      <a href="#contact" class="nav__cta glow-btn">INITIATE REQUEST</a>
+      <button class="nav__burger" aria-label="Toggle Menu" id="burger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__media" id="hero-canvas-container">
+      <canvas id="ai-canvas" class="hero__img" style="opacity: 0.8; mix-blend-mode: screen;"></canvas>
+      <div class="hero__overlay"></div>
+    </div>
+    <div class="hero__content">
+      <p class="eyebrow"><span class="ai-badge">AI-ENHANCED</span> Independent Photographer · Est. 2016</p>
+      <h1 class="hero__title">
+        <span>用光线<span class="magic-sparkle">✦</span></span>
+        <span class="italic">与算法</span>
+        <span>重构那些被遗忘的瞬间</span>
+      </h1>
+      <p class="hero__subtitle">
+        我是林月，一名常驻杭州的独立摄影师与 AI 视觉艺术家。十年来，我用镜头记录真实，用神经网络探索影像的无限边界。
+      </p>
+      <div class="hero__actions">
+        <a href="#works" class="btn btn--primary glow-btn">浏览创成作品集</a>
+        <a href="#contact" class="btn btn--ghost">模型训练邀约 →</a>
+      </div>
+    </div>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="num">12M+</span>
+        <span class="lbl">训练参数</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="num">38</span>
+        <span class="lbl">风格模型</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="num">9</span>
+        <span class="lbl">年视觉探索</span>
+      </div>
+    </div>
+    <a href="#works" class="hero__scroll" aria-label="向下滚动">
+      <span></span>
+      <small>SCROLL TO GENERATE</small>
+    </a>
+  </section>
+
+  <!-- Marquee tags -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>· 风格迁移 STYLE TRANSFER</span><span>· 创成式填补 GENERATIVE FILL</span>
+      <span>· 赛博朋克 CYBERPUNK</span><span>· 超现实 SURREALISM</span>
+      <span>· 光线追踪 RAY TRACING</span><span>· 神经网络 NEURAL NETWORKS</span>
+      <span>· 风格迁移 STYLE TRANSFER</span><span>· 创成式填补 GENERATIVE FILL</span>
+      <span>· 赛博朋克 CYBERPUNK</span><span>· 超现实 SURREALISM</span>
+      <span>· 光线追踪 RAY TRACING</span><span>· 神经网络 NEURAL NETWORKS</span>
+    </div>
+  </div>
+
+  <!-- Featured Works -->
+  <section class="works section" id="works">
+    <header class="section__head">
+      <p class="eyebrow">Generative Outputs · 创成式作品</p>
+      <h2 class="section__title">在像素的重组中,寻找<i>硅基</i>的诗意。</h2>
+      <div class="filters" role="tablist">
+        <button class="chip is-active" data-filter="all">全部 ALL</button>
+        <button class="chip" data-filter="portrait">数字克隆 CLONE</button>
+        <button class="chip" data-filter="landscape">虚拟风光 V-LANDSCAPE</button>
+        <button class="chip" data-filter="street">赛博都市 CYBERCITY</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <a href="#" class="card card--tall" data-cat="portrait">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80" alt="窗边的女子肖像" />
+        <div class="card__info">
+          <span class="card__cat">PORTRAIT · 2024</span>
+          <h3>《窗边的回声》</h3>
+        </div>
+      </a>
+      <a href="#" class="card" data-cat="landscape">
+        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80" alt="云海中的群山" />
+        <div class="card__info">
+          <span class="card__cat">LANDSCAPE · 2023</span>
+          <h3>《云上之境》</h3>
+        </div>
+      </a>
+      <a href="#" class="card" data-cat="street">
+        <img src="https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?auto=format&fit=crop&w=900&q=80" alt="夜色中的霓虹街道" />
+        <div class="card__info">
+          <span class="card__cat">STREET · 2024</span>
+          <h3>《霓虹深处》</h3>
+        </div>
+      </a>
+      <a href="#" class="card card--wide" data-cat="wedding">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80" alt="海边的婚礼现场" />
+        <div class="card__info">
+          <span class="card__cat">WEDDING · 2025</span>
+          <h3>《海角的誓言》</h3>
+        </div>
+      </a>
+      <a href="#" class="card" data-cat="portrait">
+        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=900&q=80" alt="逆光下的人像" />
+        <div class="card__info">
+          <span class="card__cat">PORTRAIT · 2023</span>
+          <h3>《逆光成诗》</h3>
+        </div>
+      </a>
+      <a href="#" class="card card--tall" data-cat="landscape">
+        <img src="https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?auto=format&fit=crop&w=900&q=80" alt="湖边晨雾" />
+        <div class="card__info">
+          <span class="card__cat">LANDSCAPE · 2022</span>
+          <h3>《湖与晨雾》</h3>
+        </div>
+      </a>
+      <a href="#" class="card" data-cat="street">
+        <img src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=900&q=80" alt="老街道的午后" />
+        <div class="card__info">
+          <span class="card__cat">STREET · 2024</span>
+          <h3>《巷口的午后》</h3>
+        </div>
+      </a>
+    </div>
+
+    <div class="works__more">
+      <a href="#" class="btn btn--ghost">查看完整作品集 →</a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about section" id="about">
+    <div class="about__media">
+      <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?auto=format&fit=crop&w=900&q=80" alt="林月的工作肖像" />
+      <span class="about__sig">— Lin Yue / AI</span>
+    </div>
+    <div class="about__text">
+      <p class="eyebrow">About · 关于我</p>
+      <h2 class="section__title">我相信，未来的影像<br/>不仅是<i>记录</i>，更是<i>想象</i>。</h2>
+      <p>
+        在过去的九年里，我背着相机走过 38 座城市，拍过雪山清晨的第一缕光。而在过去的三年，我训练了超过 50 个风格模型，在数字潜空间中重构那些现实无法抵达的梦境。
+      </p>
+      <p>
+        不论是胶片的银盐颗粒，还是 Transformer 的噪声迭代，我都将其视为一种介质。如果你也想探索超现实的视觉表达 —— 我会很乐意用算力为你筑梦。
+      </p>
+      <ul class="about__list">
+        <li><span>2024</span> 入选《数字中国》年度 AI 创作者 30 人</li>
+        <li><span>2023</span> 个人生成影展《硅基之梦》于上海 M50</li>
+        <li><span>2021</span> 与 MUJI、蔚来汽车合作 AI 虚拟广告</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services section" id="services">
+    <header class="section__head section__head--center">
+      <p class="eyebrow">Solutions · 智能影像方案</p>
+      <h2 class="section__title">每一次输入 Prompt<br/>都是一次跨维度的重构。</h2>
+    </header>
+    <div class="services__grid">
+      <article class="service">
+        <span class="service__num">01</span>
+        <h3>数字分身训练</h3>
+        <p>基于 20 张日常照片，微调训练专属 LoRA 模型，实现全场景风格泛化。</p>
+        <span class="service__price">¥ 5,800 起</span>
+      </article>
+      <article class="service service--accent">
+        <span class="service__num">02</span>
+        <h3>品牌视觉生成</h3>
+        <p>产品融合与虚拟场景构建，无需搭建实景影棚，通过算法输出超写实商业大片。</p>
+        <span class="service__price">¥ 12,800 起</span>
+      </article>
+      <article class="service">
+        <span class="service__num">03</span>
+        <h3>历史影像修复</h3>
+        <p>结合图像超分与 AI 降噪算法，将受损老照片还原至 4K 级清晰度。</p>
+        <span class="service__price">¥ 800 / 张</span>
+      </article>
+      <article class="service">
+        <span class="service__num">04</span>
+        <h3>虚实结合婚纱</h3>
+        <p>棚内绿幕拍摄 + Midjourney 场景重构，在星际或深海举办一场不可能的婚礼。</p>
+        <span class="service__price">¥ 16,000 / 套</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="quote section">
+    <blockquote>
+      <p>"林月的模型参数里，藏着比人类肉眼更敏锐的情感。她生成的不是假象，是我们梦境的高清显影。"</p>
+      <footer>— 《光影中国》数字影像年度评委</footer>
+    </blockquote>
+  </section>
+
+  <!-- Journal -->
+  <section class="journal section" id="journal">
+    <header class="section__head">
+      <p class="eyebrow">Journal · 算法手记</p>
+      <h2 class="section__title">在代码里，与潜空间一同<i>显影</i>。</h2>
+    </header>
+    <div class="journal__grid">
+      <article class="post">
+        <div class="post__cover">
+          <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=900&q=80" alt="" />
+        </div>
+        <span class="post__meta">2025.03 · 模型微调</span>
+        <h3>为什么我又把注意力拉回了 ControlNet？</h3>
+      </article>
+      <article class="post">
+        <div class="post__cover">
+          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=900&q=80" alt="" />
+        </div>
+        <span class="post__meta">2024.11 · 场景生成</span>
+        <h3>赛博北海道的冬天，适合一段废土的代码。</h3>
+      </article>
+      <article class="post">
+        <div class="post__cover">
+          <img src="https://images.unsplash.com/photo-1633412802994-5c058f151b66?auto=format&fit=crop&w=900&q=80" alt="" />
+        </div>
+        <span class="post__meta">2024.08 · 思考</span>
+        <h3>独立影像创作者的下半场：慢、真、算力。</h3>
+      </article>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact section" id="contact">
+    <div class="contact__inner">
+      <h2 class="section__title">开启一次<i>算法与光影</i>的对话</h2>
+      <p>目前 2025 年下半年模型定制名额已满，仅接受少数概念影像合作。<br/>请发送您的需求与期望的视觉方向至我的工作邮箱。</p>
+      <a href="mailto:hello@linyue-ai.com" class="btn btn--primary glow-btn">HELLO@LINYUE-AI.COM</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <div class="footer__logo">林月 / AI</div>
+        <p>独立摄影师 / AI 视觉艺术家<br/>用算法重构被遗忘的瞬间。</p>
+        <div class="footer__socials">
+          <a href="#" aria-label="WeChat">W</a>
+          <a href="#" aria-label="Weibo">X</a>
+          <a href="#" aria-label="Instagram">IG</a>
+        </div>
+      </div>
+      <div></div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2025 LIN YUE. ALL RIGHTS RESERVED.</span>
+      <span>DESIGNED BY AI / RENDERED BY PIXELS</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

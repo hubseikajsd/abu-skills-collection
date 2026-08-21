@@ -1,0 +1,32 @@
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+*~
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Node
+node_modules/
+**/node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Build output
+dist/web/dist/
+dist/web/dist-ssr/
+*.local
+
+# Release artifacts (built by scripts/release/pack-skill.mjs in CI)
+dist/release/
+
+# Skill runtime artifacts
+garden-gpt-image-2/
+
+.agents/
+
+# temp/

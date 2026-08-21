@@ -1,0 +1,49 @@
+name: Validate Skills
+
+# PR-time guard rails. Runs on every push / PR that touches a skill, the
+# release scripts, or any localized README. Cheap, fast, no side effects.
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "scripts/release/**"
+      - "README.md"
+      - "README.zh-CN.md"
+      - "README.ja-JP.md"
+      - ".github/workflows/validate-skills.yml"
+      - "package.json"
+  push:
+    branches: ["main"]
+    paths:
+      - "skills/**"
+      - "scripts/release/**"
+      - "README.md"
+      - "README.zh-CN.md"
+      - "README.ja-JP.md"
+      - ".github/workflows/validate-skills.yml"
+      - "package.json"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      # Tags are required for `npm run readme:check` — it resolves each
+      # skill's "currently published" version from the latest <skill>-v*
+      # tag. Without fetch-tags the runner sees no tags and reports every
+      # skill as "no release yet", which contradicts the actual README.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate manifests, smoke-pack, and verify README sync
+        run: npm run validate

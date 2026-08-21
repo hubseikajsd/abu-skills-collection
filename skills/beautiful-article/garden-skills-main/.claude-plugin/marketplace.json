@@ -1,0 +1,57 @@
+{
+  "name": "garden-skills",
+  "owner": {
+    "name": "ConardLi"
+  },
+  "metadata": {
+    "description": "A curated collection of agent skills covering web video presentations, visual web design, local knowledge-base retrieval, GPT Image 2 image generation, and beautifully designed single-file HTML articles.",
+    "version": "0.4.0"
+  },
+  "plugins": [
+    {
+      "name": "presentation-skills",
+      "description": "Skills for click-driven web video presentations and screen-recorded explainers.",
+      "source": "./skills/web-video-presentation",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
+    },
+    {
+      "name": "web-design-skills",
+      "description": "Skills for high-quality visual / front-end design work.",
+      "source": "./skills/web-design-engineer",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
+    },
+    {
+      "name": "knowledge-base-skills",
+      "description": "Skills for local knowledge-base retrieval and document QA.",
+      "source": "./skills/kb-retriever",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
+    },
+    {
+      "name": "image-generation-skills",
+      "description": "Skills for image generation and editing with GPT Image 2 (and OpenAI-compatible image endpoints), with three runtime modes and 70+ structured prompt templates.",
+      "source": "./skills/gpt-image-2",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
+    },
+    {
+      "name": "beautiful-article-skills",
+      "description": "Skills for turning URL / PDF / DOCX / Markdown / text / screenshots into beautifully designed, offline-friendly single-file HTML articles via the reacticle component protocol.",
+      "source": "./skills/beautiful-article",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
+    }
+  ]
+}

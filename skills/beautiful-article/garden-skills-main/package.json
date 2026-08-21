@@ -1,0 +1,26 @@
+{
+  "name": "@conardli/garden-skills",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Garden Skills — a curated collection of agent skills for Claude Code, Cursor, Codex, and other SKILL.md-compatible agents. This package.json only ships maintainer scripts; per-skill versions live in skills/<name>/manifest.json.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/ConardLi/garden-skills",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConardLi/garden-skills.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "release": "node scripts/release/cut-release.mjs",
+    "release:dry": "node scripts/release/cut-release.mjs --dry-run",
+    "list": "node scripts/release/list-skills.mjs",
+    "pack": "node scripts/release/pack-skill.mjs",
+    "pack:all": "node scripts/release/pack-skill.mjs --all",
+    "readme:sync": "node scripts/release/update-readme.mjs",
+    "readme:check": "node scripts/release/update-readme.mjs --check",
+    "validate": "npm run list && npm run pack:all && npm run readme:check"
+  }
+}

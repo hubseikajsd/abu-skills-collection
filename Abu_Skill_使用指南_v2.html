@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abu Skill 使用指南 v2</title>
+<style>
+:root {
+  --bg: #f8f9fa;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1a202c;
+  --text-secondary: #64748b;
+  --primary: #3b82f6;
+  --primary-light: #dbeafe;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 24px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #7c3aed 100%);
+  color: white;
+  padding: 48px 40px;
+  border-radius: 20px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 400px; height: 400px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.header h1 { font-size: 32px; margin-bottom: 8px; position: relative; z-index: 1; }
+.header .subtitle { font-size: 15px; opacity: 0.85; position: relative; z-index: 1; }
+.header .stats { display: flex; gap: 20px; margin-top: 24px; flex-wrap: wrap; position: relative; z-index: 1; }
+.header .stat {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+.header .version-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+
+/* Search */
+.search-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.search-box input {
+  flex: 1; border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 16px; font-size: 15px; outline: none;
+  transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+.search-box .count { font-size: 14px; color: var(--text-secondary); white-space: nowrap; }
+
+/* Category nav */
+.cat-nav {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+.cat-nav a {
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  transition: transform 0.15s, opacity 0.15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.cat-nav a:hover { transform: translateY(-1px); opacity: 0.9; }
+.cat-nav a .cnt { opacity: 0.7; font-size: 11px; }
+
+/* Category section */
+.cat-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.cat-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 16px;
+}
+.cat-header .dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cat-header h2 { font-size: 22px; }
+.cat-header .count {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+/* Skill grid */
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.skill-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  background: var(--card);
+}
+.skill-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border-color: var(--primary);
+}
+.skill-card .name {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  margin-bottom: 6px;
+  font-family: "SF Mono", "Cascadia Code", "Fira Code", monospace;
+}
+.skill-card .desc {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  margin-bottom: 6px;
+}
+.skill-card .trigger {
+  font-size: 12px; color: var(--primary);
+  font-style: italic;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+  margin-top: 4px;
+}
+.skill-card .meta {
+  display: flex; gap: 10px; margin-top: 6px;
+  font-size: 11px; color: #94a3b8;
+}
+.skill-card .meta span {
+  background: #f1f3f5; padding: 1px 8px; border-radius: 4px;
+}
+.skill-card .new-badge {
+  position: absolute; top: 10px; right: 12px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 700;
+  box-shadow: 0 2px 6px rgba(239,68,68,0.3);
+}
+
+/* Info banner */
+.info-banner {
+  background: linear-gradient(135deg, #dbeafe, #ede9fe);
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  padding: 20px 28px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: #1e40af;
+  line-height: 1.8;
+}
+.info-banner code {
+  background: rgba(255,255,255,0.7);
+  padding: 2px 8px; border-radius: 5px;
+  font-size: 13px;
+}
+
+/* Footer */
+.footer {
+  text-align: center; padding: 32px;
+  color: var(--text-secondary); font-size: 14px;
+  border-top: 1px solid var(--border); margin-top: 40px;
+}
+.footer p { margin: 4px 0; }
+.footer .generated { font-size: 12px; color: #94a3b8; }
+
+/* New skills section */
+.new-section {
+  background: linear-gradient(135deg, #fef3c7, #fed7aa);
+  border: 1px solid #fde68a;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+.new-section h2 {
+  font-size: 20px; color: #92400e;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.new-section .skill-grid .skill-card {
+  border-color: #fde68a;
+  background: rgba(255,255,255,0.8);
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="version-tag">v2 · 2026-09-03 更新</div>
+  <h1>Abu Skill 使用指南</h1>
+  <div class="subtitle">已安装技能完整清单 · 按功能领域分类 · 支持实时搜索</div>
+  <div class="stats">
+    <div class="stat">📦 总技能数：<strong>71</strong></div>
+    <div class="stat">📂 功能分类：<strong>9</strong></div>
+    <div class="stat">🌐 三平台同步：Abu / ZCode / Codex</div>
+    <div class="stat">🕐 更新时间：2026-09-03</div>
+  </div>
+</div>
+
+<div class="info-banner">
+  <strong>使用方式：</strong>
+  大部分 Skill 会在你描述任务时自动触发。也可以用 <code>/+技能名</code> 显式调用。
+  技能名前带 <code>/</code> 的为内置系统技能，不带 <code>/</code> 的为用户安装技能。
+  <br>
+  <strong>v2 改进：</strong> 按 9 大功能领域重新分类，新增写作 & 创作专区，支持分类快速跳转。
+</div>
+
+<div class="search-box">
+  <span style="font-size:20px">🔍</span>
+  <input type="text" id="search" placeholder="搜索技能名称、描述或触发条件…" oninput="filterSkills()">
+  <span class="count" id="match-count"></span>
+</div>
+
+<div class="cat-nav">
+  <a href="#cat-写作and创作" style="background:#dc2626">写作 & 创作 <span class="cnt">(10)</span></a>
+  <a href="#cat-科研and学术" style="background:#0891b2">科研 & 学术 <span class="cnt">(10)</span></a>
+  <a href="#cat-开发and工程" style="background:#7c3aed">开发 & 工程 <span class="cnt">(16)</span></a>
+  <a href="#cat-数据and分析" style="background:#ea580c">数据 & 分析 <span class="cnt">(3)</span></a>
+  <a href="#cat-知识管理andObsidian" style="background:#16a34a">知识管理 & Obsidian <span class="cnt">(5)</span></a>
+  <a href="#cat-可视化and演示" style="background:#2563eb">可视化 & 演示 <span class="cnt">(6)</span></a>
+  <a href="#cat-文档处理" style="background:#0891b2">文档处理 <span class="cnt">(4)</span></a>
+  <a href="#cat-Weband信息采集" style="background:#64748b">Web & 信息采集 <span class="cnt">(13)</span></a>
+  <a href="#cat-教学and辅助" style="background:#7c3aed">教学 & 辅助 <span class="cnt">(3)</span></a>
+</div>
+
+<div class="new-section">
+  <h2>🆕 2026-09-03 新增技能（7 个）</h2>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="ai-book-creation-assistant" data-desc="全流程图书创作（策划→大纲→逐章→文风控制→出版准备）" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">ai-book-creation-assistant</div>
+      <div class="desc">全流程图书创作（策划→大纲→逐章→文风控制→出版准备）</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>12 文件</span><span>v1.0.0</span></div>
+    </div>
+    <div class="skill-card" data-name="chenlin-memoir-writer" data-desc="回忆录匠——日记/口述→文学化回忆录，去AI味+记忆来源四级分级防幻觉" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">chenlin-memoir-writer</div>
+      <div class="desc">回忆录匠——日记/口述→文学化回忆录，去AI味+记忆来源四级分级防幻觉</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>10 文件</span><span>1.2.0</span></div>
+    </div>
+    <div class="skill-card" data-name="chinese-novelist" data-desc="中文长篇小说分章创作（10-50章，每章3000-5000字，结尾设置悬念钩子）" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">chinese-novelist</div>
+      <div class="desc">中文长篇小说分章创作（10-50章，每章3000-5000字，结尾设置悬念钩子）</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>21 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="ebook-maker" data-desc="电子书排版制作" data-trigger="- "帮我写一本" / "写本电子书" / "出一本书" - "做个 PDF 手册" / "写个小册子" - "ebook" / "电子书" / "手册"">
+      <span class="new-badge">NEW</span>
+      <div class="name">ebook-maker</div>
+      <div class="desc">电子书排版制作</div>
+      <div class="trigger">触发：- "帮我写一本" / "写本电子书" / "出一本书" - "做个 PDF 手册" / "写个小册子" - "ebook" / "电子书" / "手册"</div>
+      <div class="meta"><span>5 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="handoff" data-desc="会话交接——两档模式（轻量/完整）+ 项目存档报告，跨 session 上下文传递" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">handoff</div>
+      <div class="desc">会话交接——两档模式（轻量/完整）+ 项目存档报告，跨 session 上下文传递</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="humanizer-zh" data-desc="去除中文文本 AI 生成痕迹，基于维基百科 AI 写作特征综合指南" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">humanizer-zh</div>
+      <div class="desc">去除中文文本 AI 生成痕迹，基于维基百科 AI 写作特征综合指南</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>3 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="写作 & 创作" id="cat-写作and创作">
+  <div class="cat-header">
+    <span class="dot" style="background:#dc2626"></span>
+    <h2>写作 & 创作</h2>
+    <span class="count">10 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="ai-book-creation-assistant" data-desc=": 全流程图书创作助手，帮助用户从零完成一本书的策划、大纲、逐章写作、文风控制、内容增强与出版准备。采用作者优先与渐进式创作原则，通过自然语言长期协作完成专业书、科普书、大众读物、教材、指南与创意写作等长篇项目；在新书构思、大纲生成、章节扩写、风格调整、内容润色、事实验证与一致性维护时使用。" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">ai-book-creation-assistant</div>
+      <div class="desc">: 全流程图书创作助手，帮助用户从零完成一本书的策划、大纲、逐章写作、文风控制、内容增强与出版准备。采用作者优先与渐进式创作原则，通过自然语言长期协作完成专业书、科普书、大众读物、教材、指南与创意写作等长篇项目；在新书构思、大纲生成、章节扩写、风格调整、内容润色、事实验证与一致性维护时使用。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>12 文件</span><span>vv1.0.0</span></div>
+    </div>
+    <div class="skill-card" data-name="autobiographyreconstructor" data-desc="将原始素材（日记、笔记、书信、照片说明等）进行整理、标注和角度转换，输出忠实于原始材料、能照见平凡中不平凡之处的自传/回忆录。" data-trigger="自动触发">
+      
+      <div class="name">autobiographyreconstructor</div>
+      <div class="desc">将原始素材（日记、笔记、书信、照片说明等）进行整理、标注和角度转换，输出忠实于原始材料、能照见平凡中不平凡之处的自传/回忆录。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>3 文件</span><span>v2.0.0</span></div>
+    </div>
+    <div class="skill-card" data-name="beautiful-article" data-desc=": "把用户提供的素材（网页 URL / PDF / DOCX / Markdown / 纯文本 / 截图 / 粘贴材料）编辑、设计成一篇美丽的、可离线打开和分享的**单文件 HTML 网页文章**。基于 reacticle 组件协议：不手写裸 HTML/CSS，而用语义组件 + 受主题约束的 Raw 自由层；按 source→规划→双确认→生成→终审→修复的小型 harness 流程推进，默认 " data-trigger="自动触发">
+      
+      <div class="name">beautiful-article</div>
+      <div class="desc">: "把用户提供的素材（网页 URL / PDF / DOCX / Markdown / 纯文本 / 截图 / 粘贴材料）编辑、设计成一篇美丽的、可离线打开和分享的**单文件 HTML 网页文章**。基于 reacticle 组件协议：不手写裸 HTML/CSS，而用语义组件 + 受主题约束的 Raw 自由层；按 source→规划→双确认→生成→终审→修复的小型 harness 流程推进，默认 </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>541 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="chenlin-memoir-writer" data-desc="回忆录匠——把私人日记/口述素材整理成可信、有文学质感、保留本人声音的个人回忆录。" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">chenlin-memoir-writer</div>
+      <div class="desc">回忆录匠——把私人日记/口述素材整理成可信、有文学质感、保留本人声音的个人回忆录。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>10 文件</span><span>v1.2.0</span></div>
+    </div>
+    <div class="skill-card" data-name="chinese-novelist" data-desc="分章节创作引人入胜的中文小说。支持各种题材（悬疑/言情/奇幻/科幻/历史等），支持10-50章长篇创作，每章3000-5000字，结尾设置悬念钩子。强调深度润色去除AI痕迹，确保文字自然流畅。" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">chinese-novelist</div>
+      <div class="desc">分章节创作引人入胜的中文小说。支持各种题材（悬疑/言情/奇幻/科幻/历史等），支持10-50章长篇创作，每章3000-5000字，结尾设置悬念钩子。强调深度润色去除AI痕迹，确保文字自然流畅。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>21 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="ebook-maker" data-desc="Ebook Maker — AI 电子书制作工作流" data-trigger="- "帮我写一本" / "写本电子书" / "出一本书" - "做个 PDF 手册" / "写个小册子" - "ebook" / "电子书" / "手册"">
+      <span class="new-badge">NEW</span>
+      <div class="name">ebook-maker</div>
+      <div class="desc">Ebook Maker — AI 电子书制作工作流</div>
+      <div class="trigger">触发：- "帮我写一本" / "写本电子书" / "出一本书" - "做个 PDF 手册" / "写个小册子" - "ebook" / "电子书" / "手册"</div>
+      <div class="meta"><span>5 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="handoff" data-desc="会话交接——当对话过长、接近上下文上限，或完成一个阶段需要切换 session 时，将当前对话的关键信息压缩成一份交接文档，让新的 agent 实例可以无缝接续工作。" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">handoff</div>
+      <div class="desc">会话交接——当对话过长、接近上下文上限，或完成一个阶段需要切换 session 时，将当前对话的关键信息压缩成一份交接文档，让新的 agent 实例可以无缝接续工作。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="humanizer-zh" data-desc="去除文本中的 AI 生成痕迹。适用于编辑或审阅文本，使其听起来更自然、更像人类书写。" data-trigger="自动触发">
+      <span class="new-badge">NEW</span>
+      <div class="name">humanizer-zh</div>
+      <div class="desc">去除文本中的 AI 生成痕迹。适用于编辑或审阅文本，使其听起来更自然、更像人类书写。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>3 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="translate-book" data-desc=": Translate books (PDF/DOCX/EPUB) into any language using parallel sub-agents. Converts input -> Markdown chunks -> translated chunks -> HTML/DOCX/EPUB/PDF." data-trigger="自动触发">
+      
+      <div class="name">translate-book</div>
+      <div class="desc">: Translate books (PDF/DOCX/EPUB) into any language using parallel sub-agents. Converts input -> Markdown chunks -> translated chunks -> HTML/DOCX/EPUB/PDF.</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>46 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="writing-plans" data-desc=": Use when you have a spec or requirements for a multi-step task, before touching code" data-trigger="自动触发">
+      
+      <div class="name">writing-plans</div>
+      <div class="desc">: Use when you have a spec or requirements for a multi-step task, before touching code</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="科研 & 学术" id="cat-科研and学术">
+  <div class="cat-header">
+    <span class="dot" style="background:#0891b2"></span>
+    <h2>科研 & 学术</h2>
+    <span class="count">10 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="experiment-design" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">experiment-design</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="launch" data-desc=": Pre-flight checklist for long-running ML training jobs covering config diff, run naming, path verification, monitoring setup, and restart-cleanup. Use when the user asks to launch, kick off, start, " data-trigger="自动触发">
+      
+      <div class="name">launch</div>
+      <div class="desc">: Pre-flight checklist for long-running ML training jobs covering config diff, run naming, path verification, monitoring setup, and restart-cleanup. Use when the user asks to launch, kick off, start, </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="literature-research" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">literature-research</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="paper-verification" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">paper-verification</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="paper-writing" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">paper-writing</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="paperjury" data-desc=": Three modes for CS-conference papers (CVPR/ICCV/ECCV vision, ACL/EMNLP/NAACL NLP, ICLR/NeurIPS/ICML/AAAI ML). DIRECT-EDIT mode (common): the user describes a change in Chinese or English and the man" data-trigger="自动触发">
+      
+      <div class="name">paperjury</div>
+      <div class="desc">: Three modes for CS-conference papers (CVPR/ICCV/ECCV vision, ACL/EMNLP/NAACL NLP, ICLR/NeurIPS/ICML/AAAI ML). DIRECT-EDIT mode (common): the user describes a change in Chinese or English and the man</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>75 文件</span><span>v1.2.1</span></div>
+    </div>
+    <div class="skill-card" data-name="reproduce" data-desc=": End-to-end paper reproduction from arxiv URL through smoke runs to replication experiments. Handles missing or partial official code, missing training scripts, missing hyperparameters, and private d" data-trigger="自动触发">
+      
+      <div class="name">reproduce</div>
+      <div class="desc">: End-to-end paper reproduction from arxiv URL through smoke runs to replication experiments. Handles missing or partial official code, missing training scripts, missing hyperparameters, and private d</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>8 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="research-paper-writing" data-desc=": Improve academic paper writing quality for ML/CV/NLP-style papers with clear section structure, paragraph flow, and reviewer-facing presentation. Use when drafting or revising Abstract, Introduction" data-trigger="自动触发">
+      
+      <div class="name">research-paper-writing</div>
+      <div class="desc">: Improve academic paper writing quality for ML/CV/NLP-style papers with clear section structure, paragraph flow, and reviewer-facing presentation. Use when drafting or revising Abstract, Introduction</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>39 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="research-publishing" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">research-publishing</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="reviewer-defense" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">reviewer-defense</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="开发 & 工程" id="cat-开发and工程">
+  <div class="cat-header">
+    <span class="dot" style="background:#7c3aed"></span>
+    <h2>开发 & 工程</h2>
+    <span class="count">16 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="brainstorming" data-desc=": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation" data-trigger="自动触发">
+      
+      <div class="name">brainstorming</div>
+      <div class="desc">: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>8 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="codex-windows-fast-patch" data-desc=": Reapply and repair Windows Codex Desktop after Store upgrades, including custom provider models hidden by Statsig available_models filtering, the dependent blue-purple Power slider and its Ultra tog" data-trigger="自动触发">
+      
+      <div class="name">codex-windows-fast-patch</div>
+      <div class="desc">: Reapply and repair Windows Codex Desktop after Store upgrades, including custom provider models hidden by Statsig available_models filtering, the dependent blue-purple Power slider and its Ultra tog</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>33 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="debug" data-desc=": Evidence-before-action diagnosis of failing ML experiments. Probes the system before guessing causes, process list, dmesg, GPU stats, log scrollback, checkpoint state, then states a hypothesis as a " data-trigger="自动触发">
+      
+      <div class="name">debug</div>
+      <div class="desc">: Evidence-before-action diagnosis of failing ML experiments. Probes the system before guessing causes, process list, dmesg, GPU stats, log scrollback, checkpoint state, then states a hypothesis as a </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="dispatching-parallel-agents" data-desc=": Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies" data-trigger="自动触发">
+      
+      <div class="name">dispatching-parallel-agents</div>
+      <div class="desc">: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="executing-plans" data-desc=": Use when you have a written implementation plan to execute in a separate session with review checkpoints" data-trigger="自动触发">
+      
+      <div class="name">executing-plans</div>
+      <div class="desc">: Use when you have a written implementation plan to execute in a separate session with review checkpoints</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="finishing-a-development-branch" data-desc=": Use when implementation is complete, all tests pass, and you need to decide how to integrate the work" data-trigger="自动触发">
+      
+      <div class="name">finishing-a-development-branch</div>
+      <div class="desc">: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="install-github-skill" data-desc=": 从 GitHub 仓库安装 Skill 到 Abu 工具箱的完整操作流程，包括仓库结构检查、安装方式选择、网络问题处理和安装验证。当用户要求从 GitHub 安装/导入某个 skill、从开源仓库安装技能到 Abu 时使用。" data-trigger="自动触发">
+      
+      <div class="name">install-github-skill</div>
+      <div class="desc">: 从 GitHub 仓库安装 Skill 到 Abu 工具箱的完整操作流程，包括仓库结构检查、安装方式选择、网络问题处理和安装验证。当用户要求从 GitHub 安装/导入某个 skill、从开源仓库安装技能到 Abu 时使用。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="receiving-code-review" data-desc=": Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performati" data-trigger="自动触发">
+      
+      <div class="name">receiving-code-review</div>
+      <div class="desc">: Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performati</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="requesting-code-review" data-desc=": Use when completing tasks, implementing major features, or before merging to verify work meets requirements" data-trigger="自动触发">
+      
+      <div class="name">requesting-code-review</div>
+      <div class="desc">: Use when completing tasks, implementing major features, or before merging to verify work meets requirements</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="subagent-driven-development" data-desc=": Use when executing implementation plans with independent tasks in the current session" data-trigger="自动触发">
+      
+      <div class="name">subagent-driven-development</div>
+      <div class="desc">: Use when executing implementation plans with independent tasks in the current session</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>7 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="systematic-debugging" data-desc=": Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes" data-trigger="自动触发">
+      
+      <div class="name">systematic-debugging</div>
+      <div class="desc">: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>11 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="test-driven-development" data-desc=": Use when implementing any feature or bugfix, before writing implementation code" data-trigger="自动触发">
+      
+      <div class="name">test-driven-development</div>
+      <div class="desc">: Use when implementing any feature or bugfix, before writing implementation code</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="using-git-worktrees" data-desc=": Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback" data-trigger="自动触发">
+      
+      <div class="name">using-git-worktrees</div>
+      <div class="desc">: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="using-superpowers" data-desc=": Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions" data-trigger="自动触发">
+      
+      <div class="name">using-superpowers</div>
+      <div class="desc">: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>5 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="verification-before-completion" data-desc=": Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; eviden" data-trigger="自动触发">
+      
+      <div class="name">verification-before-completion</div>
+      <div class="desc">: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; eviden</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="writing-skills" data-desc=": Use when creating new skills, editing existing skills, or verifying skills work before deployment" data-trigger="自动触发">
+      
+      <div class="name">writing-skills</div>
+      <div class="desc">: Use when creating new skills, editing existing skills, or verifying skills work before deployment</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>7 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="数据 & 分析" id="cat-数据and分析">
+  <div class="cat-header">
+    <span class="dot" style="background:#ea580c"></span>
+    <h2>数据 & 分析</h2>
+    <span class="count">3 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="3-statement-model" data-desc=": Complete, populate and fill out 3-statement financial model templates (Income Statement, Balance Sheet, Cash Flow Statement). Use when asked to fill out model templates, complete existing model fram" data-trigger="自动触发">
+      
+      <div class="name">3-statement-model</div>
+      <div class="desc">: Complete, populate and fill out 3-statement financial model templates (Income Statement, Balance Sheet, Cash Flow Statement). Use when asked to fill out model templates, complete existing model fram</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>28 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="compare" data-desc=": Same-epoch comparison of training runs across wandb, neptune, tensorboard, or mlflow. Aligns runs at the student's current step (never current-vs-final-of-baseline) and separates proxy metrics from " data-trigger="自动触发">
+      
+      <div class="name">compare</div>
+      <div class="desc">: Same-epoch comparison of training runs across wandb, neptune, tensorboard, or mlflow. Aligns runs at the student's current step (never current-vs-final-of-baseline) and separates proxy metrics from </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="dataset-curation" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">dataset-curation</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="知识管理 & Obsidian" id="cat-知识管理andObsidian">
+  <div class="cat-header">
+    <span class="dot" style="background:#16a34a"></span>
+    <h2>知识管理 & Obsidian</h2>
+    <span class="count">5 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="json-canvas" data-desc=": Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps, flowcharts, or when the user mention" data-trigger="自动触发">
+      
+      <div class="name">json-canvas</div>
+      <div class="desc">: Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps, flowcharts, or when the user mention</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="obsidian-bases" data-desc=": Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of notes, or when the user mentions Bases, " data-trigger="自动触发">
+      
+      <div class="name">obsidian-bases</div>
+      <div class="desc">: Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of notes, or when the user mentions Bases, </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="obsidian-canvas-creator" data-desc=": Create Obsidian Canvas files from text content, supporting both MindMap and freeform layouts. Use this skill when users want to visualize content as an interactive canvas, create mind maps, or organ" data-trigger="自动触发">
+      
+      <div class="name">obsidian-canvas-creator</div>
+      <div class="desc">: Create Obsidian Canvas files from text content, supporting both MindMap and freeform layouts. Use this skill when users want to visualize content as an interactive canvas, create mind maps, or organ</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>5 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="obsidian-cli" data-desc=": Interact with Obsidian vaults using the Obsidian CLI to read, create, search, and manage notes, tasks, properties, and more. Also supports plugin and theme development with commands to reload plugin" data-trigger="自动触发">
+      
+      <div class="name">obsidian-cli</div>
+      <div class="desc">: Interact with Obsidian vaults using the Obsidian CLI to read, create, search, and manage notes, tasks, properties, and more. Also supports plugin and theme development with commands to reload plugin</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="obsidian-markdown" data-desc=": Create and edit Obsidian Flavored Markdown with wikilinks, embeds, callouts, properties, and other Obsidian-specific syntax. Use when working with .md files in Obsidian, or when the user mentions wi" data-trigger="自动触发">
+      
+      <div class="name">obsidian-markdown</div>
+      <div class="desc">: Create and edit Obsidian Flavored Markdown with wikilinks, embeds, callouts, properties, and other Obsidian-specific syntax. Use when working with .md files in Obsidian, or when the user mentions wi</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>4 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="可视化 & 演示" id="cat-可视化and演示">
+  <div class="cat-header">
+    <span class="dot" style="background:#2563eb"></span>
+    <h2>可视化 & 演示</h2>
+    <span class="count">6 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="educational-html-visualization" data-desc=": 将理论/教材/学习内容转化为结构清晰、视觉友好的教育型HTML可视化文件。从内容分析、结构拆解、视觉元素匹配到完整HTML渲染，输出可直接在浏览器中打开的教学示意图。" data-trigger="自动触发">
+      
+      <div class="name">educational-html-visualization</div>
+      <div class="desc">: 将理论/教材/学习内容转化为结构清晰、视觉友好的教育型HTML可视化文件。从内容分析、结构拆解、视觉元素匹配到完整HTML渲染，输出可直接在浏览器中打开的教学示意图。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="excalidraw-diagram" data-desc=": Generate Excalidraw diagrams from text content. Supports three output modes - Obsidian (.md), Standard (.excalidraw), and Animated (.excalidraw with animation order). Triggers on "Excalidraw", "画图"," data-trigger="自动触发">
+      
+      <div class="name">excalidraw-diagram</div>
+      <div class="desc">: Generate Excalidraw diagrams from text content. Supports three output modes - Obsidian (.md), Standard (.excalidraw), and Animated (.excalidraw with animation order). Triggers on "Excalidraw", "画图",</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span><span>v1.2.1</span></div>
+    </div>
+    <div class="skill-card" data-name="frontend-slides" data-desc=": Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a " data-trigger="自动触发">
+      
+      <div class="name">frontend-slides</div>
+      <div class="desc">: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>163 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="guizang-ppt-skill" data-desc=": 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板。提供两种风格：① "电子杂志 × 电子墨水"（衬线 + 流体背景 + 暖色） ② "瑞士国际主义"（无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮）。当用户需要制作分享 / 演讲 / 发布会风格的网页 PPT，或提到"杂志风 PPT"、"瑞士风 PPT"、"Swiss St" data-trigger="自动触发">
+      
+      <div class="name">guizang-ppt-skill</div>
+      <div class="desc">: 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板。提供两种风格：① "电子杂志 × 电子墨水"（衬线 + 流体背景 + 暖色） ② "瑞士国际主义"（无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮）。当用户需要制作分享 / 演讲 / 发布会风格的网页 PPT，或提到"杂志风 PPT"、"瑞士风 PPT"、"Swiss St</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>37 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="mermaid-visualizer" data-desc=": Transform text content into professional Mermaid diagrams for presentations and documentation. Use when users ask to visualize concepts, create flowcharts, or make diagrams from text. Supports proce" data-trigger="自动触发">
+      
+      <div class="name">mermaid-visualizer</div>
+      <div class="desc">: Transform text content into professional Mermaid diagrams for presentations and documentation. Use when users ask to visualize concepts, create flowcharts, or make diagrams from text. Supports proce</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="ppt-master" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">ppt-master</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>12206 文件</span><span>v4.3.0</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="文档处理" id="cat-文档处理">
+  <div class="cat-header">
+    <span class="dot" style="background:#0891b2"></span>
+    <h2>文档处理</h2>
+    <span class="count">4 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="doc-video-duration" data-desc=": 扫描 Word 文档中所有视频链接（B站/微信视频号），通过 B站 API 逐一查询真实时长，替换占位时长并追加到缺失的视频条目后。输出带真实时长的完整版文档。" data-trigger="自动触发">
+      
+      <div class="name">doc-video-duration</div>
+      <div class="desc">: 扫描 Word 文档中所有视频链接（B站/微信视频号），通过 B站 API 逐一查询真实时长，替换占位时长并追加到缺失的视频条目后。输出带真实时长的完整版文档。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="doc-video-summary" data-desc=": 扫描 Word 文档中所有视频材料（B站/微信视频号等），通过 web_search 逐一检索视频标题/关键词，获取内容概括并追加到每个视频条目后，输出带内容概括的完整版文档。" data-trigger="自动触发">
+      
+      <div class="name">doc-video-summary</div>
+      <div class="desc">: 扫描 Word 文档中所有视频材料（B站/微信视频号等），通过 web_search 逐一检索视频标题/关键词，获取内容概括并追加到每个视频条目后，输出带内容概括的完整版文档。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="learning-discussion-analysis" data-desc=": 根据学习文档中的讨论问题，结合文档内容与网络调研，以实事求是原则逐题详细分析，生成带格式的Word文档（含答案+引用链接）。适用场景：学习记录中的重点讨论问题、研讨材料中的思考题、考核性质的问题回答。" data-trigger="自动触发">
+      
+      <div class="name">learning-discussion-analysis</div>
+      <div class="desc">: 根据学习文档中的讨论问题，结合文档内容与网络调研，以实事求是原则逐题详细分析，生成带格式的Word文档（含答案+引用链接）。适用场景：学习记录中的重点讨论问题、研讨材料中的思考题、考核性质的问题回答。</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="qiaomu-anything-to-notebooklm" data-desc=": 多源内容智能处理器：支持微信公众号、网页、YouTube、播客（小宇宙/喜马拉雅）、PDF、Markdown等，自动上传到NotebookLM并生成播客/PPT/思维导图等多种格式。支持深度分析模式和飞书文档自动创建" data-trigger="自动触发">
+      
+      <div class="name">qiaomu-anything-to-notebooklm</div>
+      <div class="desc">: 多源内容智能处理器：支持微信公众号、网页、YouTube、播客（小宇宙/喜马拉雅）、PDF、Markdown等，自动上传到NotebookLM并生成播客/PPT/思维导图等多种格式。支持深度分析模式和飞书文档自动创建</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>20 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="Web & 信息采集" id="cat-Weband信息采集">
+  <div class="cat-header">
+    <span class="dot" style="background:#64748b"></span>
+    <h2>Web & 信息采集</h2>
+    <span class="count">13 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="defuddle" data-desc=": Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provides a URL to read or analyze, for online " data-trigger="自动触发">
+      
+      <div class="name">defuddle</div>
+      <div class="desc">: Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provides a URL to read or analyze, for online </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="file-conversion" data-desc=": Convert files between formats — PDF to Word, HEIC to JPG, MP4 to MP3, CSV to JSON, EPUB to MOBI, and 999 total routes across images, video, audio, documents, data, fonts, ebooks, and archives. Free " data-trigger="自动触发">
+      
+      <div class="name">file-conversion</div>
+      <div class="desc">: Convert files between formats — PDF to Word, HEIC to JPG, MP4 to MP3, CSV to JSON, EPUB to MOBI, and 999 total routes across images, video, audio, documents, data, fonts, ebooks, and archives. Free </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo" data-desc="Local-first web intelligence for AI agents. Use wigolo for ALL web operations: searching, fetching pages, crawling sites, checking the cache, extracting data, finding similar content, deep research, d" data-trigger="自动触发">
+      
+      <div class="name">wigolo</div>
+      <div class="desc">Local-first web intelligence for AI agents. Use wigolo for ALL web operations: searching, fetching pages, crawling sites, checking the cache, extracting data, finding similar content, deep research, d</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>3 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-agent" data-desc="Autonomous data gathering across sources — plans search queries and URLs from a natural-language prompt, executes in parallel within a time budget, optionally extracts structured fields via JSON Schem" data-trigger="自动触发">
+      
+      <div class="name">wigolo-agent</div>
+      <div class="desc">Autonomous data gathering across sources — plans search queries and URLs from a natural-language prompt, executes in parallel within a time budget, optionally extracts structured fields via JSON Schem</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-cache" data-desc="Local-first knowledge cache — full-text and hybrid semantic search over every page wigolo has already fetched, crawled, or searched. Use before any web request: cached hits return instantly and free. " data-trigger="自动触发">
+      
+      <div class="name">wigolo-cache</div>
+      <div class="desc">Local-first knowledge cache — full-text and hybrid semantic search over every page wigolo has already fetched, crawled, or searched. Use before any web request: cached hits return instantly and free. </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-crawl" data-desc="Local-first multi-page crawl with sitemap, BFS, DFS, and URL-map strategies, anchor-fragment dedup, rate limiting, robots.txt respect, and automatic local cache population. Use when the user wants to " data-trigger="自动触发">
+      
+      <div class="name">wigolo-crawl</div>
+      <div class="desc">Local-first multi-page crawl with sitemap, BFS, DFS, and URL-map strategies, anchor-fragment dedup, rate limiting, robots.txt respect, and automatic local cache population. Use when the user wants to </div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-diff" data-desc="Compare two versions of a page and see exactly what changed — a live URL against its cached copy, two URLs, or two markdown blobs. Section-level hunks, word- or line-level granularity, or a summary of" data-trigger="自动触发">
+      
+      <div class="name">wigolo-diff</div>
+      <div class="desc">Compare two versions of a page and see exactly what changed — a live URL against its cached copy, two URLs, or two markdown blobs. Section-level hunks, word- or line-level granularity, or a summary of</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-extract" data-desc="Local-first structured extraction from any webpage — tables, definition lists, key-value pairs, JSON-LD, microdata, chart hints (SVG titles / aria-labels / figcaptions), brand assets, and metadata. Us" data-trigger="自动触发">
+      
+      <div class="name">wigolo-extract</div>
+      <div class="desc">Local-first structured extraction from any webpage — tables, definition lists, key-value pairs, JSON-LD, microdata, chart hints (SVG titles / aria-labels / figcaptions), brand assets, and metadata. Us</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-fetch" data-desc="Local-first URL fetch with clean markdown, structured metadata, JS-rendered SPA support, authenticated browser sessions, PDFs, and content change detection. Use when the user provides a URL, says "fet" data-trigger="自动触发">
+      
+      <div class="name">wigolo-fetch</div>
+      <div class="desc">Local-first URL fetch with clean markdown, structured metadata, JS-rendered SPA support, authenticated browser sessions, PDFs, and content change detection. Use when the user provides a URL, says "fet</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-find-similar" data-desc="Hybrid semantic discovery — fuses embeddings + keyword search + live web search via 3-way Reciprocal Rank Fusion. Use when the user has a good source and wants more like it, says "find similar", "rela" data-trigger="自动触发">
+      
+      <div class="name">wigolo-find-similar</div>
+      <div class="desc">Hybrid semantic discovery — fuses embeddings + keyword search + live web search via 3-way Reciprocal Rank Fusion. Use when the user has a good source and wants more like it, says "find similar", "rela</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-research" data-desc="Local-first multi-step research with question decomposition, parallel search, structured briefs, cross-references, and gap analysis. Use when the user needs comprehensive analysis, comparison reports," data-trigger="自动触发">
+      
+      <div class="name">wigolo-research</div>
+      <div class="desc">Local-first multi-step research with question decomposition, parallel search, structured briefs, cross-references, and gap analysis. Use when the user needs comprehensive analysis, comparison reports,</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-search" data-desc="Local-first web search with ML reranking, multi-query arrays, domain scoping, phrase-exact match, time-range filters, country hints, depth tiers, and explainable evidence scoring. Use when the user wa" data-trigger="自动触发">
+      
+      <div class="name">wigolo-search</div>
+      <div class="desc">Local-first web search with ML reranking, multi-query arrays, domain scoping, phrase-exact match, time-range filters, country hints, depth tiers, and explainable evidence scoring. Use when the user wa</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+    <div class="skill-card" data-name="wigolo-watch" data-desc="Monitor a page for changes over time. Create lazy watch jobs on one or many URLs, list them, and check for changes on demand — with optional SSRF-guarded webhook delivery when a change is detected. Us" data-trigger="自动触发">
+      
+      <div class="name">wigolo-watch</div>
+      <div class="desc">Monitor a page for changes over time. Create lazy watch jobs on one or many URLs, list them, and check for changes on demand — with optional SSRF-guarded webhook delivery when a change is detected. Us</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span><span>v0.1.43-beta.2</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="教学 & 辅助" id="cat-教学and辅助">
+  <div class="cat-header">
+    <span class="dot" style="background:#7c3aed"></span>
+    <h2>教学 & 辅助</h2>
+    <span class="count">3 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name="latex-setup" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">latex-setup</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>1 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="tutor" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">tutor</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>2 文件</span></div>
+    </div>
+    <div class="skill-card" data-name="tutor-setup" data-desc=": >" data-trigger="自动触发">
+      
+      <div class="name">tutor-setup</div>
+      <div class="desc">: ></div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>5 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-section" data-cat="其他" id="cat-其他">
+  <div class="cat-header">
+    <span class="dot" style="background:#64748b"></span>
+    <h2>其他</h2>
+    <span class="count">1 个技能</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-card" data-name=""cli-anything-wps"" data-desc=": "WPS Office CLI — JSON数据驱动PPT自动生成 + 命令行操控WPS文字/表格/演示文稿"" data-trigger="自动触发">
+      <div class="name">"cli-anything-wps"</div>
+      <div class="desc">: "WPS Office CLI — JSON数据驱动PPT自动生成 + 命令行操控WPS文字/表格/演示文稿"</div>
+      <div class="trigger">触发：自动触发</div>
+      <div class="meta"><span>147 文件</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Abu Skill 使用指南 v2 · 共 <strong>71</strong> 个技能 · 9 个功能分类 · 三平台同步</p>
+  <p class="generated">生成时间：2026年9月3日 · GitHub: hubseikajsd/abu-skills-collection</p>
+</div>
+
+</div>
+
+<script>
+function filterSkills() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const cards = document.querySelectorAll('.skill-card');
+  const sections = document.querySelectorAll('.cat-section, .new-section');
+  let visible = 0;
+  
+  if (!q) {
+    cards.forEach(c => c.style.display = '');
+    sections.forEach(s => s.style.display = '');
+    document.getElementById('match-count').textContent = '';
+    return;
+  }
+  
+  cards.forEach(c => {
+    const text = (c.dataset.name + ' ' + c.dataset.desc + ' ' + c.dataset.trigger).toLowerCase();
+    if (text.includes(q)) { c.style.display = ''; visible++; }
+    else { c.style.display = 'none'; }
+  });
+  
+  sections.forEach(s => {
+    const hasVisible = s.querySelectorAll('.skill-card:not([style*="display: none"])').length > 0;
+    s.style.display = hasVisible ? '' : 'none';
+  });
+  
+  document.getElementById('match-count').textContent = visible > 0 ? '找到 ' + visible + ' 个匹配' : '未找到匹配';
+}
+</script>
+</body>
+</html>
